@@ -5,6 +5,7 @@ from collections import defaultdict
 import torch
 import torch.utils.data
 from PIL import Image
+from numpy import asarray
 INT_CLOTHING_CATEGORY = ['bk', 'bag', 'belt', 'boots', 'footwear', 'outer', 'dress', 'sunglasses',
                          'pants', 'top', 'shorts', 'skirt', 'headwear', 'scarf']
 
@@ -66,6 +67,13 @@ class CustomColorAnnotatedDataloader(torch.utils.data.Dataset):
         img_path = self.ordered_files[idx]
         if self.color_space == 'RGB':
             img = Image.open(img_path).convert("RGB")
+        if self.color_space == 'GRY':
+            img = Image.open(img_path).convert("RGB")
+            data = asarray(img)
+            data = ((0.33 * data[:,:,0]) + (0.33 * data[:,:,1]) + (0.33 * data[:,:,2]) )
+            #data = ((0.3 * data[:,:,0]) + (0.59 * data[:,:,1]) + (0.11 * data[:,:,2]) )
+            data = np.dstack((data, data, data)).astype(np.uint8)
+            img = Image.fromarray(data)
         elif self.color_space == 'OPP':
             img  = cv2.imread(img_path)
         elif self.color_space == 'YBR':

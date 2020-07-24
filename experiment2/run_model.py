@@ -26,8 +26,8 @@ def main(color_space, img_dir, train_dir, test_dir, identifier):
     dataset = CustomColorAnnotatedDataloader(train_dir, img_dir, train_transforms, color_space=color_space)
     dataset_test = CustomColorAnnotatedDataloader(test_dir, img_dir, test_transforms, color_space=color_space)
     
-    dataset.ordered_files = dataset.ordered_files
-    dataset_test.ordered_files = dataset_test.ordered_files
+    dataset.ordered_files = dataset.ordered_files#[:1000]
+    dataset_test.ordered_files = dataset_test.ordered_files#[:100]
 
     data_loader = torch.utils.data.DataLoader(dataset,
                     batch_size=8, shuffle=True, num_workers=4,collate_fn=utils.collate_fn)
@@ -68,7 +68,7 @@ def main(color_space, img_dir, train_dir, test_dir, identifier):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Execute experiment2 for colored object detection..')
-    parser.add_argument('--color_space', type=str, help='Color space to use in experiment (opp, rgb, yuv, ybr)')
+    parser.add_argument('--color_space', type=str, help='Color space to use in experiment (opp, rgb, yuv, ybr, gry)')
     parser.add_argument('--images_dir', type=str, help='Directory where images are stored')
     parser.add_argument('--train_annotations', type=str, help='Color annotations for training data')
     parser.add_argument('--test_annotations', type=str, help='Color annotations for test data')
